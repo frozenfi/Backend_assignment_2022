@@ -1,17 +1,19 @@
+"use strict";
+const { application } = require("express");
 const express = require("express");
 const app = express();
 
 //Middle ware
-const morgan = require("morgan");
-//const logger = require("./logger");
+//const morgan = require("morgan");
 
-app.use(morgan("tiny"));
+//app.use(morgan("tiny"));
+
 app.use(express.static("./public"));
+app.set("view engine", "pug");
 
 const PORT = 3001;
-// app.get("/", (req, res) => {
-//   res.send("Hello app using express");
-// });
+let reqCounter = 0;
+
 app.get("/catinfo", (req, res) => {
   const cat = {
     name: "Frank Cat",
@@ -21,7 +23,16 @@ app.get("/catinfo", (req, res) => {
   res.json(cat);
 });
 app.get("/test", (req, res) => {
+  console.log("This direct to the /test.");
   reqCounter++;
+
+  //Use of pug to render the data
+  res.render("test", {
+    title: "Trial on PUG",
+    header1: "This page tests PUG",
+    header2: "Counter Value",
+    exampleText: `Page requested ${reqCounter} times`,
+  });
 });
 
 app.get("/about", (req, res) => {
