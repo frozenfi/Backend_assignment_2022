@@ -1,0 +1,26 @@
+GET http://localhost:3001/user
+
+
+###
+POST http://localhost:3001/user
+Content-Type: application/json
+
+{
+    "name":"Smile Aura",
+    "id": 3,
+    "email":"smau@smau.eu",
+    "password":"pass"
+
+}
+
+###
+PUT http://localhost:3001/user/:id
+Content-Type: application/json
+
+{
+    "name":"Smil ura",
+    "id": 3,
+    "email":"smau@smau.eu",
+    "password":"prss"
+
+}
