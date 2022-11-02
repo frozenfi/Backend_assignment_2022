@@ -4,36 +4,38 @@ const catModel = require("../models/catModel");
 
 let cats = catModel.cats;
 
-const cat_list_get = (req, res) => {
+const cat_list_get = async (req, res) => {
+  const cats = await catModel.getAllCats();
   res.json(cats);
 };
-const cat_list_get_id = (req, res) => {
-  const id = Number(req.params.id);
+const cat_list_get_id = async (req, res) => {
+  const catId = req.params.id;
+  const cat = await catModel.getCatById(res, catId);
   //Using Find
-  const catByFind = cats.find((cat) => cat.id === id);
+  //const catByFind = cats.find((cat) => cat.id === id);
 
   //Using filter
-  const cat = cats.filter((cat) => cat.id === id);
+  //const cat = cats.filter((cat) => cat.id === id);
 
   //const catGet = cats.filter((cat)=> cat.id ==cat.id)[0]
 
   //other way but not logical
   //const catByOther = res.json(cats[id - 1]);
 
-  if (cat) {
-    res.json(cat);
-  } else res.status(404).send(`Error getting data of cat having id: ${id}`);
+  if (cat[0]) {
+    res.json(cat[0]);
+  } else res.status(404).send(`Error!!`);
 };
 
 const cat_list_post = (req, res) => {
   const body = req.body;
-  if (!body.name || !body.birthdate) {
+  if (!body.name) {
     return res.status(404).json({
       error: "Content missing",
     });
   }
   const cat = {
-    id: body.id,
+    //id: body.id,
     name: body.name,
     birthdate: body.birthdate,
     weight: body.weight,
@@ -42,6 +44,10 @@ const cat_list_post = (req, res) => {
   };
   cats = cats.concat(cat);
   res.json(cat);
+};
+const cat_list_create = (req, res) => {
+  console.log(req.body);
+  res.send("adding cat");
 };
 
 const cat_list_put = (req, res) => {
@@ -65,4 +71,5 @@ module.exports = {
   cat_list_get_id,
   cat_list_post,
   cat_list_put,
+  cat_list_create,
 };

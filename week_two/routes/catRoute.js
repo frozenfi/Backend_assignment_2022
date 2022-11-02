@@ -1,10 +1,12 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const catController = require("../controllers/catController");
 
-router.get("/", catController.cat_list_get);
-router.post("/", catController.cat_list_post);
+const uploads = multer({ dest: "../uploads" });
+router.get("/", uploads.single("cat"), catController.cat_list_get);
+router.post("/", catController.cat_list_get);
 
 router
   .route("/:id")
