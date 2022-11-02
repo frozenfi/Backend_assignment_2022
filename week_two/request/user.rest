@@ -1,3 +1,4 @@
+
 GET http://localhost:3001/user
 
 
@@ -14,13 +15,17 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3001/user/:id
+PUT http://localhost:3001/user/2
 Content-Type: application/json
 
 {
     "name":"Smil ura",
-    "id": 3,
+    "id": 1,
     "email":"smau@smau.eu",
     "password":"prss"
 
 }
+
+###
+DELETE http://localhost:3001/user/1
+

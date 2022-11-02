@@ -4,7 +4,6 @@ const router = express.Router();
 const users = require("../controllers/userController");
 
 router.get("/", users.user_list_get);
-router.get("/:id", users.user_list_get_id);
 router.post("/", users.user_list_post);
 
 router

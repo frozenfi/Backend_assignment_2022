@@ -9,7 +9,16 @@ const cat_list_get = (req, res) => {
 };
 const cat_list_get_id = (req, res) => {
   const id = Number(req.params.id);
-  const cat = cats.find((cat) => cat.id === id);
+  //Using Find
+  const catByFind = cats.find((cat) => cat.id === id);
+
+  //Using filter
+  const cat = cats.filter((cat) => cat.id === id);
+
+  //const catGet = cats.filter((cat)=> cat.id ==cat.id)[0]
+
+  //other way but not logical
+  //const catByOther = res.json(cats[id - 1]);
 
   if (cat) {
     res.json(cat);
