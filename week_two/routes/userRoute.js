@@ -3,13 +3,13 @@ const express = require("express");
 const router = express.Router();
 const users = require("../controllers/userController");
 
-router.get("/", users.user_list_get);
-router.post("/", users.user_list_post);
+router.get("/", users.getUsers);
+router.post("/", users.createUser);
 
 router
   .route("/:id")
-  .get(users.user_list_get_id)
-  .put(users.user_list_put)
-  .delete(users.user_list_delete);
+  .get(users.getUser)
+  .put(users.modifyUser)
+  .delete(users.deleteUser);
 
 module.exports = router;

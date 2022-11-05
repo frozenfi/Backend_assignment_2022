@@ -6,11 +6,6 @@ GET http://localhost:3001/cat
 POST http://localhost:3001/cat
 Content-Type: application/json
 
-{
-    "id":7,
-    "name": "myCat",
-    "birthdate": "2020-12-23"
-}
 
 ###
 PUT http://localhost:3001/cat/1

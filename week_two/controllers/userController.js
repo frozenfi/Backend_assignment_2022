@@ -2,6 +2,48 @@
 const userModel = require("../models/userModel");
 let users = userModel.users;
 
+const getUsers = async (req, res) => {
+  const users = await userModel.getAllUsers();
+  const newUsers = users.map((user) => {
+    delete user.password;
+    return user;
+  });
+  res.json(newUsers);
+};
+
+const getUser = async (req, res) => {
+  const userId = req.params.id;
+  const user = await userModel.getUserById(res, userId);
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+  }
+};
+
+const createUser = (req, res) => {
+  console.log(req.body);
+  res.send("Adding a new User");
+};
+const modifyUser = (req, res) => {
+  console.log("TODO");
+};
+
+const deleteUser = (req, res) => {
+  console.log("TODO");
+};
+
+module.exports = {
+  getUser,
+  getUsers,
+  createUser,
+  modifyUser,
+  deleteUser,
+};
+
+/*
+
 const user_list_get = (req, res) => {
   users.map((user) => {
     delete user.password;
@@ -52,6 +94,7 @@ const user_list_delete = (req, res) => {
   console.log("Delete successful!!");
 };
 
+
 module.exports = {
   user_list_get,
   user_list_get_id,
@@ -59,3 +102,4 @@ module.exports = {
   user_list_put,
   user_list_delete,
 };
+*/
