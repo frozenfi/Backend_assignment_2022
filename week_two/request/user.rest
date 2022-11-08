@@ -1,21 +1,20 @@
 
-GET http://localhost:3001/user
+GET http://localhost:3000/user
 
 
 ###
-POST http://localhost:3001/user
+POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "name":"Smile Aura",
-    "id": 3,
+    "name":"Smiley",
     "email":"smau@smau.eu",
-    "password":"pass"
-
+    "password":"pass",
+    "role": 1
 }
 
 ###
-PUT http://localhost:3001/user/2
+PUT http://localhost:3000/user/2
 Content-Type: application/json
 
 {
@@ -27,5 +26,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3001/user/1
+DELETE http://localhost:3000/user/1
 

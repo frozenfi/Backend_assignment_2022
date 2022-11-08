@@ -1,23 +1,33 @@
 
-GET http://localhost:3001/cat
+GET http://localhost:3000/cat
 
 
 ###
-POST http://localhost:3001/cat
+POST http://localhost:3000/cat
 Content-Type: application/json
 
+ {
+   "name": "Micky",
+    "weight": 17,
+    "owner": 2,
+    "filename": "http://placekitten.com/400/304",
+    "birthdate": "2019-02-11T22:00:00.000Z"
+  }
+ 
 
 ###
-PUT http://localhost:3001/cat/1
+PUT http://localhost:3000/cat/
 Content-Type: application/json
 
 {
-    "id":2,
-    "name": "JPT rks",
+    "cat_id":15,
+    "name": "JPT",
+    "weight": 12,
+    "owner":1,
     "birthdate":"2012-12-12"
 }
 
 ###
-DELETE http://localhost:3001/cat/7
+DELETE http://localhost:3000/cat/12
 
 
