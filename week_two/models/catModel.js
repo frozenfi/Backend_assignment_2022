@@ -4,7 +4,9 @@ const promisePool = pool.promise();
 
 const getAllCats = async (res) => {
   try {
-    const sql = "SELECT * FROM wop_cat";
+    const sql =
+      "SELECT cat_id, wop_cat.name, weight,owner, filename, birthdate, wop_user.name AS ownername " +
+      "FROM wop_cat JOIN wop_user ON wop_cat.owner = wop_user.user_id";
     const [rows] = await promisePool.query(sql);
     return rows;
   } catch (e) {
@@ -47,16 +49,19 @@ const deleteCatById = async (res, catId) => {
   }
 };
 
-const modifyCat = async (cat, res) => {
+const updateCatById = async (cat, res) => {
   try {
-    const { name, weight, owner, birthdate, id } = cat;
-    const sql = `UPDATE wop_cat SET name = "?", weight = ?, owner = ?, birthdate = "?" WHERE cat_id = ? `;
-    const values = [name, weight, owner, birthdate, id];
-    const [result] = await promisePool.query(sql, values);
-    console.log(result.affectedRows);
-    return result[0];
+    console.log("Modify cat:", cat);
+    const sql =
+      "UPDATE wop_cat SET name = ?, weight = ?, owner = ?, birthdate = ? " +
+      "WHERE cat_id = ?";
+    const values = [cat.name, cat.weight, cat.owner, cat.birthdate, cat.id];
+    const [rows] = await promisePool.query(sql, values);
+    console.log(rows.affectedRows);
+    return rows;
   } catch (e) {
-    res.status(501).send(e.message);
+    console.error("error", e.message);
+    res.status(500).json({ error: e.message });
   }
 };
 
@@ -65,5 +70,5 @@ module.exports = {
   getCatById,
   addCat,
   deleteCatById,
-  modifyCat,
+  updateCatById,
 };

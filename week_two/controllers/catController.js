@@ -1,5 +1,4 @@
 "use strict";
-const { rawListeners } = require("../database/db");
 const catModel = require("../models/catModel");
 
 //let cats = catModel.cats;
@@ -26,13 +25,16 @@ const createCat = async (req, res) => {
 };
 
 const modifyCat = async (req, res) => {
-  //const catData = req.body;
-  //console.log(catData);
-  const catModify = await catModel.modifyCat(res, req);
-  if (!catModify) {
-    res.send("cat modified");
+  const cat = req.body;
+  if (req.params.catId) {
+    cat.id = req.params.catId;
+  }
+  const result = await catModel.updateCatById(cat, res);
+  console.log(result);
+  if (result.affectedRows > 0) {
+    res.json({ message: "cat modified: " + cat.id });
   } else {
-    res.sendStatus(502);
+    res.status(404).json({ message: "nothing changed" });
   }
 };
 
