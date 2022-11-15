@@ -1,5 +1,6 @@
 "use strict";
 const catModel = require("../models/catModel");
+const { validationResult } = require("express-validator");
 
 //let cats = catModel.cats;
 
@@ -20,8 +21,24 @@ const createCat = async (req, res) => {
   const cat = req.body;
   cat.filename = req.file.filename;
   console.log("creating a new cat:", cat);
-  const catId = await catModel.addCat(cat, res);
-  res.status(201).json({ catId });
+  //const catId = await catModel.addCat(cat, res);
+  //res.status(201).json({ catId });
+
+  const errors = validationResult(req);
+  console.log("validation error", errors);
+
+  if (errors.isEmpty() && req.file) {
+    const cat = req.body;
+    cat.filename = req.file.filename;
+    console.log("creating a new cat:", cat);
+    const catId = await catModel.addCat(cat, res);
+    res.status(201).json({ message: "Cat Created", catId });
+  } else {
+    res.status(400).json({
+      message: "cat creation failed",
+      errors: errors.array(),
+    });
+  }
 };
 
 const modifyCat = async (req, res) => {

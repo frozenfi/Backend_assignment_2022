@@ -28,9 +28,9 @@ const getUserById = async (id, res) => {
 };
 const addUser = async (user, res) => {
   try {
-    const { name, email, password, role } = user;
+    const { name, email, passwd, role } = user;
     const sql = "INSERT INTO wop_user VALUES (null, ?, ?, ?, ?)";
-    const values = [name, email, password, role];
+    const values = [name, email, passwd, role];
     const [result] = await promisePool.query(sql, values);
     return result.insertId;
   } catch (e) {
