@@ -18,22 +18,22 @@ const getCat = async (req, res) => {
 };
 
 const createCat = async (req, res) => {
-  const cat = req.body;
-  cat.filename = req.file.filename;
-  console.log("creating a new cat:", cat);
-  //const catId = await catModel.addCat(cat, res);
-  //res.status(201).json({ catId });
-
+  // const cat = req.body;
+  // cat.filename = req.file.filename;
   const errors = validationResult(req);
-  console.log("validation error", errors);
+  console.log("creating a new cat:", cat);
 
-  if (errors.isEmpty() && req.file) {
+  if (!req.file) {
+    res.status(404).json({ message: "file missing or invalid" });
+  }
+  if (errors.isEmpty()) {
     const cat = req.body;
     cat.filename = req.file.filename;
     console.log("creating a new cat:", cat);
     const catId = await catModel.addCat(cat, res);
     res.status(201).json({ message: "Cat Created", catId });
   } else {
+    console.log("validation error", errors);
     res.status(400).json({
       message: "cat creation failed",
       errors: errors.array(),
