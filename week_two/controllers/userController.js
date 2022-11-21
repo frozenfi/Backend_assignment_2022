@@ -12,7 +12,7 @@ const getUser = async (req, res) => {
   if (user) {
     res.json(user);
   } else {
-    res.status(404);
+    res.status(404).send("Errorr!!");
   }
 };
 
