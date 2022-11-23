@@ -38,12 +38,26 @@ const addCat = async (cat, res) => {
 };
 
 const deleteCatById = async (res, owner, catId) => {
+  const [user] = await promisePool.query(
+    `SELECT role from wop_user WHERE user_id = ?`,
+    [owner]
+  );
+  const user_role = user[0].role;
+  console.log("User role is: ", user_role);
   try {
-    const [rows] = await promisePool.query(
-      "DELETE FROM wop_cat WHERE cat_id = ? AND owner = ?",
-      [catId, owner]
-    );
-    return rows[0];
+    if (user_role === 0) {
+      const [rows] = await promisePool.execute(
+        "DELETE FROM wop_cat WHERE cat_id = ?",
+        [catId]
+      );
+      return rows[0];
+    } else {
+      const [rows] = await promisePool.query(
+        "DELETE FROM wop_cat WHERE cat_id = ? AND owner = ?",
+        [catId, owner]
+      );
+      return rows[0];
+    }
   } catch (e) {
     res.status(500).send(e.message);
   }
@@ -51,14 +65,34 @@ const deleteCatById = async (res, owner, catId) => {
 
 const updateCatById = async (cat, res) => {
   try {
+    const [user] = await promisePool.query(
+      `SELECT role from wop_user WHERE user_id = ?`,
+      [cat.owner]
+    );
+    const user_role = user[0].role;
+    console.log("User role is: ", user_role);
+
+    // user_role "0" is for the admin
+    if (user_role == 0) {
+      const sql =
+        "UPDATE wop_cat SET name = ?, weight = ?, owner = ?, birthdate = ? " +
+        "WHERE cat_id = ?";
+      const values = [cat.name, cat.weight, cat.owner, cat.birthdate, cat.id];
+      console.log(values);
+      const [rows] = await promisePool.query(sql, values);
+      console.log(rows.affectedRows);
+      return rows;
+    } else {
+      const sql =
+        "UPDATE wop_cat SET name = ?, weight = ?, birthdate = ? " +
+        "WHERE cat_id = ? AND owner = ?";
+      const values = [cat.name, cat.weight, cat.birthdate, cat.id, cat.owner];
+      console.log(values);
+      const [rows] = await promisePool.query(sql, values);
+      console.log(rows.affectedRows);
+      return rows;
+    }
     console.log("Modify cat:", cat);
-    const sql =
-      "UPDATE wop_cat SET name = ?, weight = ?, owner = ?, birthdate = ? " +
-      "WHERE cat_id = ?";
-    const values = [cat.name, cat.weight, cat.owner, cat.birthdate, cat.id];
-    const [rows] = await promisePool.query(sql, values);
-    console.log(rows.affectedRows);
-    return rows;
   } catch (e) {
     console.error("error", e.message);
     res.status(500).json({ error: e.message });

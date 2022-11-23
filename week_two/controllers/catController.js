@@ -41,8 +41,9 @@ const createCat = async (req, res) => {
 
 const modifyCat = async (req, res) => {
   const cat = req.body;
-  if (req.params.catId) {
-    cat.id = req.params.catId;
+  cat.owner = req.user.user_id;
+  if (req.params.id) {
+    cat.id = req.params.id;
   }
   const result = await catModel.updateCatById(cat, res);
   console.log(result);
