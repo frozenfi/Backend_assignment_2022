@@ -4,9 +4,10 @@ const router = express.Router();
 const { body } = require("express-validator");
 const users = require("../controllers/userController");
 
+router.get("/", users.getUsers);
+router.get("/token", users.checkToken);
 router
   .route("/")
-  .get(users.getUsers)
   .post(
     body("name").isLength({ min: 3 }).trim().escape(),
     body("email").isEmail().normalizeEmail(),

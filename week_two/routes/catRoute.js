@@ -20,9 +20,9 @@ router.get("/", catController.getCats);
 router.post(
   "/",
   upload.single("cat"),
-  body("name").isAlphanumeric().trim().escape(),
+  body("name").isLength({ min: 3 }).trim().escape(),
   body("birthdate").isDate(),
-  body("owner").isInt({ min: 1 }),
+  //body("owner").isInt({ min: 1 }),
   body("weight").isFloat({ min: 0.1, max: 30 }),
   catController.createCat
 );

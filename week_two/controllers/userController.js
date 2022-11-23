@@ -61,10 +61,15 @@ const deleteUser = async (req, res) => {
   } else res.status(404).send(`Error!! deleting user!!`);
 };
 
+const checkToken = (req, res) => {
+  res.json({ user: req.user });
+};
+
 module.exports = {
   getUser,
   getUsers,
   modifyUser,
   createUser,
   deleteUser,
+  checkToken,
 };
