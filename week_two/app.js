@@ -13,6 +13,7 @@ const passport = require("./utils/passport");
 const PORT = 3000;
 
 app.use(express.static("uploads"));
+app.use("/thumbnails", express.static("thumbnails"));
 app.use(cors());
 
 app.use(morgan("tiny"));

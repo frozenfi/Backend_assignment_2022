@@ -33,6 +33,7 @@ const getUserLogin = async (user) => {
       "SELECT * FROM wop_user WHERE email = ?;",
       user
     );
+    //console.log(rows);
     return rows;
   } catch (e) {
     console.log("error", e.message);

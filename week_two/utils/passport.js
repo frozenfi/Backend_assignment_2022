@@ -4,6 +4,7 @@ const Strategy = require("passport-local").Strategy;
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const { getUserLogin } = require("../models/userModel");
 
@@ -17,17 +18,28 @@ passport.use(
       if (user === undefined) {
         return done(null, false, { message: "Incorrect email." });
       }
-      if (user.password !== password) {
+      //Hash login password and compare with the password in database
+
+      const passwordOK = await bcrypt.compare(password, user.password);
+      if (!passwordOK) {
+        return done(null, false, { message: "Incorrect password." });
+      }
+      return done(null, user, { message: "Logged In Successfully" });
+    } catch (err) {
+      return done(err);
+    }
+
+    //TO access through the unhashed password
+    /*   if (user.password !== password) {
         return done(null, false, { message: "Incorrect password." });
       }
       return done(null, { ...user }, { message: "Logged In Successfully" }); // use spread syntax to create shallow copy to get rid of binary row type
     } catch (err) {
       return done(err);
-    }
+    } */
   })
 );
 
-// TODO: JWT strategy for handling bearer token
 passport.use(
   new JWTStrategy(
     {
@@ -39,7 +51,5 @@ passport.use(
     }
   )
 );
-
-// consider .env for secret, e.g. secretOrKey: process.env.JWT_SECRET
 
 module.exports = passport;
