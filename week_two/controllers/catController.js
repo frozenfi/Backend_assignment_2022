@@ -1,7 +1,7 @@
 "use strict";
 const catModel = require("../models/catModel");
 const { validationResult } = require("express-validator");
-const { makeThumbnail } = require("../utils/image");
+const { makeThumbnail, getCoordinates } = require("../utils/image");
 
 //let cats = catModel.cats;
 
@@ -24,13 +24,11 @@ const createCat = async (req, res) => {
   if (!req.file) {
     res.status(404).json({ message: "file missing or invalid" });
   } else if (errors.isEmpty()) {
-    //
-    await makeThumbnail(req.file.path, req.file.filename);
-    //TODO: Use image.js/ getCoords
     const cat = req.body;
-    //const userId = req.user.user_id;
-    cat.filename = req.file.filename;
+    await makeThumbnail(req.file.path, req.file.filename);
+    cat.coords = JSON.stringify(await getCoordinates(req.file.path));
     cat.owner = req.user.user_id;
+    cat.filename = req.file.filename;
     console.log("creating a new cat:", cat);
     const catId = await catModel.addCat(cat, res);
     res.status(201).json({ message: "Cat Created", catId });
