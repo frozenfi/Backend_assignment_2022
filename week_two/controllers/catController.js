@@ -7,6 +7,11 @@ const { makeThumbnail, getCoordinates } = require("../utils/image");
 
 const getCats = async (req, res) => {
   const cats = await catModel.getAllCats(res);
+  cats.map((cat) => {
+    // convert birthdate date object to 'YYYY-MM-DD' string format
+    cat.birthdate = cat.birthdate.toISOString().split("T")[0];
+    return cat;
+  });
   res.json(cats);
 };
 const getCat = async (req, res) => {
@@ -14,6 +19,7 @@ const getCat = async (req, res) => {
   const cat = await catModel.getCatById(res, catId);
 
   if (cat) {
+    cat.birthdate = cat.birthdate.toISOString().split("T")[0];
     res.json(cat);
   } else res.status(404).send(`Error!!`);
 };
@@ -27,6 +33,7 @@ const createCat = async (req, res) => {
     const cat = req.body;
     await makeThumbnail(req.file.path, req.file.filename);
     cat.coords = JSON.stringify(await getCoordinates(req.file.path));
+
     cat.owner = req.user.user_id;
     cat.filename = req.file.filename;
     console.log("creating a new cat:", cat);

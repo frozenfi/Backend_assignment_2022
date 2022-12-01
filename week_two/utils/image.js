@@ -6,7 +6,6 @@ const getCoordinates = (imgFile) => {
   // imgFile = full path to uploaded image
   return new Promise((resolve, reject) => {
     try {
-      // TODO: Use node-exif to get longitude and latitude from imgFile
       // coordinates below should be an array of GPS coordinates in decimal format: [longitude, latitude]
       new ExifImage({ image: imgFile }, (error, exifData) => {
         let coordinates;
@@ -14,16 +13,17 @@ const getCoordinates = (imgFile) => {
           console.log("Error: " + error.message);
         } else {
           console.log(exifData); // Do something with your data!
-          const decimalLon = gpsToDecimal(
-            exifData.gps.GPSLongitude,
-            exifData.gps.GPSLongitudeRef
-          );
-          const decimalLat = gpsToDecimal(
-            exifData.gps.GPSLatitude,
-            exifData.gps.GPSLatitudeRef
-          );
-          coordinates = [decimalLon, decimalLat];
-          console.log(coordinates);
+          if (exifData.gps.GPSLongitude) {
+            const decimalLon = gpsToDecimal(
+              exifData.gps.GPSLongitude,
+              exifData.gps.GPSLongitudeRef
+            );
+            const decimalLat = gpsToDecimal(
+              exifData.gps.GPSLatitude,
+              exifData.gps.GPSLatitudeRef
+            );
+            coordinates = [decimalLon, decimalLat];
+          }
         }
         resolve(coordinates);
       });
@@ -36,9 +36,7 @@ const getCoordinates = (imgFile) => {
 // convert GPS coordinates to decimal format
 // for longitude, send exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef
 // for latitude, send exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef
-// convert GPS coordinates to decimal format
-// for longitude, send exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef
-// for latitude, send exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef
+
 const gpsToDecimal = (gpsData, hem) => {
   let d =
     parseFloat(gpsData[0]) +
